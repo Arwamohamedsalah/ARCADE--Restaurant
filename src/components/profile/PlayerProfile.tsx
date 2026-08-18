@@ -5,7 +5,8 @@ import { useArcade } from "@/lib/context/ArcadeContext";
 import { useLanguage } from "@/lib/context/LanguageContext";
 import { ArcadePanel } from "@/components/ui/ArcadePanel";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { cn } from "@/lib/utils";
+import { PlayerNameForm } from "@/components/profile/PlayerNameForm";
+import { cn, displayHandle } from "@/lib/utils";
 
 const BADGE = ["first-order", "speed-eater", "burger-master", "arcade-legend"] as const;
 const COLORS = ["bg-cyan", "bg-magenta", "bg-gold", "bg-purple"];
@@ -29,8 +30,13 @@ export function PlayerProfile() {
       <PageHeader eyebrow={t("profile.eyebrow")} title={t("profile.title")} subtitle={t("profile.subtitle")} />
       <ArcadePanel className="mb-6 p-6">
         <p className="font-hud text-[10px] text-magenta">{t("profile.handle")}</p>
-        <h2 className="mt-2 font-pixel text-lg text-cyan sm:text-2xl">{t("hud.player")} 01</h2>
+        <h2 className="mt-2 font-pixel text-lg text-cyan sm:text-2xl">
+          {displayHandle(player.handle, `${t("hud.player")} 01`)}
+        </h2>
         <p className="mt-2 font-hud text-xs text-gold">{t("profile.levelLine", { n: String(player.level).padStart(2, "0") })}</p>
+        <div className="mt-6 max-w-md">
+          <PlayerNameForm />
+        </div>
       </ArcadePanel>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {stats.map((stat) => (

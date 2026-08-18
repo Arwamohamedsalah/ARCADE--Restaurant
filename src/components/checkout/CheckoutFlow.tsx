@@ -8,11 +8,12 @@ import type { Order, PaymentMethod } from "@/lib/types";
 import { ArcadeButton } from "@/components/ui/ArcadeButton";
 import { ArcadePanel } from "@/components/ui/ArcadePanel";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { displayHandle } from "@/lib/utils";
 
 const PAYMENTS: PaymentMethod[] = ["cod", "card", "wallet"];
 
 export function CheckoutFlow() {
-  const { cart, total, checkout } = useArcade();
+  const { cart, total, checkout, player } = useArcade();
   const { t, locale } = useLanguage();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(false);
@@ -34,7 +35,7 @@ export function CheckoutFlow() {
     if (!cart.length) return;
     const data = new FormData(e.currentTarget);
     const created = checkout({
-      name: String(data.get("name") || `${t("hud.player")} 01`),
+      name: String(data.get("name") || displayHandle(player.handle, `${t("hud.player")} 01`)),
       phone: String(data.get("phone") || ""),
       address: String(data.get("address") || ""),
       payment: (String(data.get("payment")) as PaymentMethod) || "cod",
@@ -98,7 +99,7 @@ export function CheckoutFlow() {
           <form className="space-y-4" onSubmit={submit}>
             <label className="block">
               <span className="font-hud text-[10px] text-muted tracking-[0.16em] rtl:tracking-normal">{t("checkout.name")}</span>
-              <input required name="name" defaultValue={`${t("hud.player")} 01`} className="mt-1 w-full border border-cyan/30 bg-void px-3 py-3 text-sm outline-none focus:border-cyan" />
+              <input required name="name" defaultValue={displayHandle(player.handle, `${t("hud.player")} 01`)} className="mt-1 w-full border border-cyan/30 bg-void px-3 py-3 text-sm outline-none focus:border-cyan" />
             </label>
             <label className="block">
               <span className="font-hud text-[10px] text-muted tracking-[0.16em] rtl:tracking-normal">{t("checkout.phone")}</span>

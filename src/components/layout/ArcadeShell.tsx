@@ -14,16 +14,19 @@ import { InsertCoin } from "@/components/insert/InsertCoin";
 import { PlayerSelect } from "@/components/onboarding/PlayerSelect";
 import { WelcomePlace } from "@/components/onboarding/WelcomePlace";
 import { GuidedTour } from "@/components/onboarding/GuidedTour";
+import { NameGate } from "@/components/profile/PlayerNameForm";
 import { useOnboarding } from "@/lib/context/OnboardingContext";
+import { hasCustomHandle } from "@/lib/utils";
 
 export function ArcadeShell({ children }: { children: ReactNode }) {
-  const { hydrated, insertedCoin, insertCoin } = useArcade();
+  const { hydrated, insertedCoin, insertCoin, player } = useArcade();
   const { t, ready } = useLanguage();
   const { phase } = useOnboarding();
   const pathname = usePathname();
   const playMode = pathname.startsWith("/play");
   const floatingLang = playMode || !insertedCoin || phase === "ask" || phase === "welcome";
   const inSite = hydrated && insertedCoin && ready && phase !== "ask" && phase !== "welcome" && phase !== "loading";
+  const needName = inSite && phase === "done" && !hasCustomHandle(player.handle);
 
   return (
     <div className="arcade-bg flex h-dvh max-h-dvh flex-col overflow-hidden text-cream">
@@ -59,6 +62,7 @@ export function ArcadeShell({ children }: { children: ReactNode }) {
       </AnimatePresence>
       {hydrated && insertedCoin && ready && phase === "welcome" && <WelcomePlace />}
       {hydrated && insertedCoin && ready && phase === "ask" && <PlayerSelect />}
+      {needName && <NameGate />}
       {hydrated && insertedCoin && ready && (phase === "tour" || phase === "coach") && <GuidedTour />}
     </div>
   );

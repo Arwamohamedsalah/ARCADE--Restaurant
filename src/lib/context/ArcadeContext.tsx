@@ -28,7 +28,7 @@ import type {
   ToastMessage,
   UpgradeId,
 } from "@/lib/types";
-import { makeOrderId, xpToLevel } from "@/lib/utils";
+import { makeOrderId, xpToLevel, sanitizeHandle } from "@/lib/utils";
 
 const STORAGE_KEY = "arcade-eatery-save";
 const INSERT_KEY = "arcade-eatery-inserted";
@@ -92,7 +92,8 @@ type Action =
   | { type: "DISMISS_TOAST"; id: string }
   | { type: "SET_MUTED"; muted: boolean }
   | { type: "BUY_UPGRADE"; id: UpgradeId }
-  | { type: "APPLY_SHIFT"; summary: ShiftSummary };
+  | { type: "APPLY_SHIFT"; summary: ShiftSummary }
+  | { type: "SET_HANDLE"; handle: string };
 
 function persistable(state: State): Persisted {
   return {
@@ -129,6 +130,10 @@ function reducer(state: State, action: Action): State {
       return {
         ...state,
         ...action.payload,
+        player: {
+          ...DEFAULT_PLAYER,
+          ...action.payload.player,
+        },
         restaurant,
       };
     }
@@ -298,6 +303,14 @@ function reducer(state: State, action: Action): State {
         },
       };
     }
+    case "SET_HANDLE": {
+      const handle = sanitizeHandle(action.handle);
+      if (!handle) return state;
+      return {
+        ...state,
+        player: { ...state.player, handle },
+      };
+    }
     default:
       return state;
   }
@@ -330,6 +343,7 @@ type ArcadeContextValue = State & {
   buyUpgrade: (id: UpgradeId) => boolean;
   applyShift: (summary: ShiftSummary) => void;
   setMuted: (muted: boolean) => void;
+  setHandle: (handle: string) => boolean;
 };
 
 const ArcadeContext = createContext<ArcadeContextValue | null>(null);
@@ -477,6 +491,18 @@ export function ArcadeProvider({ children }: { children: ReactNode }) {
       setMuted(muted) {
         setArcadeMuted(muted);
         dispatch({ type: "SET_MUTED", muted });
+      },
+      setHandle(handle) {
+        const next = sanitizeHandle(handle);
+        if (!next) {
+          arcadeSfx.error();
+          toast(t("onboard.nameNeed"));
+          return false;
+        }
+        dispatch({ type: "SET_HANDLE", handle: next });
+        arcadeSfx.coin();
+        toast(t("toast.handleSaved"), next);
+        return true;
       },
     }),
     [state, hydrated, cartCount, subtotal, discount, total, coinsEarned, xpTotal, toast, t],

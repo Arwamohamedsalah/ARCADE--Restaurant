@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { useArcade } from "@/lib/context/ArcadeContext";
 import { useLanguage } from "@/lib/context/LanguageContext";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { displayHandle } from "@/lib/utils";
 
 export const NAV = [
   { href: "/", key: "nav.home", icon: Home },
@@ -77,9 +78,11 @@ export function ArcadeNav() {
           >
             {t("nav.play")}
           </Link>
-          <Link href="/profile" className="hud-chip px-2 py-1.5">
+          <Link href="/profile" className="hud-chip max-w-24 px-2 py-1.5 sm:max-w-32">
             <p className="font-hud text-[8px] text-muted">{t("hud.player")}</p>
-            <p className="font-hud text-[10px] text-cyan">01</p>
+            <p className="truncate font-hud text-[10px] text-cyan">
+              {displayHandle(player.handle, "01")}
+            </p>
           </Link>
           <div className="hud-chip hidden px-2 py-1.5 sm:block">
             <p className="font-hud text-[8px] text-muted">{t("hud.level")}</p>

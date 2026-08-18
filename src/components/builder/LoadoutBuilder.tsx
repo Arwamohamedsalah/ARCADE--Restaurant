@@ -9,14 +9,13 @@ import {
   LOADOUT_TOPPINGS,
 } from "@/lib/data/loadout";
 import type { LoadoutOption } from "@/lib/types";
-import { powerBar } from "@/lib/utils";
+import { cn, powerBar, displayHandle } from "@/lib/utils";
 import { useArcade } from "@/lib/context/ArcadeContext";
 import { useLanguage } from "@/lib/context/LanguageContext";
 import { ArcadeButton } from "@/components/ui/ArcadeButton";
 import { ArcadePanel } from "@/components/ui/ArcadePanel";
 import { FoodVisual } from "@/components/ui/FoodVisual";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { cn } from "@/lib/utils";
 
 function Choice({
   option,
@@ -44,7 +43,7 @@ function Choice({
 }
 
 export function LoadoutBuilder() {
-  const { loadout, setLoadout, lockLoadout } = useArcade();
+  const { loadout, setLoadout, lockLoadout, player } = useArcade();
   const { t, locale } = useLanguage();
   const egp = (n: number) =>
     t("currency.egp", { n: n.toLocaleString(locale === "ar" ? "ar-EG" : "en-EG") });
@@ -139,7 +138,7 @@ export function LoadoutBuilder() {
 
         <ArcadePanel glow="gold" className="h-fit p-5 lg:sticky lg:top-24">
           <p className="font-hud text-[10px] text-gold tracking-[0.2em] rtl:tracking-normal">
-            {t("hud.player")} 01
+            {displayHandle(player.handle, `${t("hud.player")} 01`)}
           </p>
           <h2 className="mt-2 font-pixel text-xs">{t("build.current")}</h2>
           <div className="mx-auto my-5 flex justify-center">

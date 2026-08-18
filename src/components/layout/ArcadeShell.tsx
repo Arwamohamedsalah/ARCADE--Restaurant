@@ -26,21 +26,21 @@ export function ArcadeShell({ children }: { children: ReactNode }) {
   const inSite = hydrated && insertedCoin && ready && phase !== "ask" && phase !== "welcome" && phase !== "loading";
 
   return (
-    <div className="arcade-bg min-h-dvh text-cream">
+    <div className="arcade-bg flex h-dvh max-h-dvh flex-col overflow-hidden text-cream">
       <CRTOverlay />
       {floatingLang && (
         <div className="fixed top-3 z-[80] end-3">
           <LanguageSwitcher />
         </div>
       )}
-      <div className="relative z-10 mx-auto min-h-dvh max-w-[1440px] lg:p-3">
-        <div className="cabinet-frame flex min-h-dvh flex-col bg-void/40 lg:min-h-[calc(100dvh-24px)]">
+      <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[1440px] flex-1 flex-col lg:p-3">
+        <div className="cabinet-frame flex min-h-0 flex-1 flex-col overflow-hidden bg-void/40">
           {inSite && !playMode && <ArcadeNav />}
           <main
             className={
               playMode
-                ? "relative flex-1 px-2 pb-4 pt-3 sm:px-5 lg:px-8"
-                : "relative flex-1 px-3 pb-24 pt-4 sm:px-6 lg:px-8 lg:pb-8"
+                ? "relative min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-2 pb-32 pt-3 sm:px-5 lg:px-8"
+                : "relative min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-3 pb-28 pt-4 sm:px-6 lg:px-8 lg:pb-8"
             }
           >
             {inSite ? children : null}

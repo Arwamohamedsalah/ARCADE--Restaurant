@@ -10,8 +10,8 @@ export function PlayerSelect() {
   const { startBeginner, startReturning } = useOnboarding();
 
   return (
-    <div className="fixed inset-0 z-[72] flex items-center justify-center arcade-bg px-4">
-      <div className="w-full max-w-lg border border-cyan/30 bg-void/90 px-6 py-10 text-center cabinet-frame sm:px-10 sm:py-12">
+    <div className="fixed inset-0 z-[72] flex items-start justify-center overflow-y-auto arcade-bg px-4 py-6 sm:items-center">
+      <div className="my-auto w-full max-w-lg border border-cyan/30 bg-void/90 px-6 py-10 text-center cabinet-frame sm:px-10 sm:py-12">
         <p className="font-hud text-[10px] text-magenta tracking-[0.35em] rtl:tracking-normal">
           {t("onboard.askEyebrow")}
         </p>

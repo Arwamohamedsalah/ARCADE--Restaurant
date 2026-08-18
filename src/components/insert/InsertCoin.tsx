@@ -47,12 +47,12 @@ export function InsertCoin({ onDone }: { onDone: () => void }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[70] flex items-center justify-center arcade-bg"
+      className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto arcade-bg sm:items-center"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 1.04 }}
       transition={{ duration: 0.7 }}
     >
-      <div className="relative mx-4 w-full max-w-xl border border-cyan/30 bg-void/80 px-6 py-10 text-center cabinet-frame sm:px-12 sm:py-14">
+      <div className="relative my-auto mx-4 w-full max-w-xl border border-cyan/30 bg-void/80 px-6 py-10 text-center cabinet-frame sm:px-12 sm:py-14">
         <p className="font-hud text-[10px] text-magenta tracking-[0.4em] rtl:tracking-normal">{t("insert.cabinet")}</p>
         <h1 className="mt-5 font-pixel text-xl text-cyan glitch sm:text-3xl">{t("brand.full")}</h1>
         <p className="mt-4 font-hud text-[10px] text-gold tracking-[0.35em] sm:text-xs rtl:tracking-normal">

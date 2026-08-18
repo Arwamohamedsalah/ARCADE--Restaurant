@@ -59,7 +59,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       lang={locale}
       dir={dir}
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${pressStart.variable} ${orbitron.variable} ${cairo.variable} ${changa.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${pressStart.variable} ${orbitron.variable} ${cairo.variable} ${changa.variable} h-full overflow-hidden antialiased`}
     >
       <head>
         <script
@@ -68,7 +68,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           }}
         />
       </head>
-      <body className="min-h-full">
+      <body className="h-full overflow-hidden">
         <Providers initialLocale={locale}>{children}</Providers>
       </body>
     </html>

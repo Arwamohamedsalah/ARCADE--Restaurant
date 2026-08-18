@@ -35,7 +35,7 @@ export function ArcadeDashboard() {
       : t("home.streakStart");
 
   return (
-    <div lang={locale} className="relative overflow-hidden pb-4">
+    <div lang={locale} className="relative overflow-x-hidden pb-4">
       <div className="pointer-events-none absolute inset-0 hidden md:block">
         {FLOATS.map((token) => (
           <motion.span

@@ -350,16 +350,16 @@ export function ShiftPlay({ progress, muted, onMute, onQuit, onEnd }: Props) {
   }, [coaching, state.guests.length]);
 
   useEffect(() => {
-    if (!coaching || step !== 2 || !selected) return;
+    if (!coaching || step !== 1 || !selected) return;
     if (platesMatch(state.plate, selected.order) && state.cooking.length === 0) next();
   }, [coaching, step, selected, state.plate, state.cooking.length, next]);
 
   useEffect(() => {
-    if (coaching && step === 3 && state.completed > 0) next();
+    if (coaching && step === 2 && state.completed > 0) next();
   }, [coaching, step, state.completed, next]);
 
   useEffect(() => {
-    if (coaching && step === 3 && state.pop?.titleKey === "game.wrong") back();
+    if (coaching && step === 2 && state.pop?.titleKey === "game.wrong") back();
   }, [coaching, step, state.pop, back]);
 
   useEffect(() => {
@@ -413,12 +413,14 @@ export function ShiftPlay({ progress, muted, onMute, onQuit, onEnd }: Props) {
         <p className="font-hud text-[9px] text-muted rtl:tracking-normal">
           {t("game.serveHud", { done: state.completed, quota: meta.quota, sat: Math.round(state.satisfaction) })}
         </p>
-        <ArcadeButton variant="ghost" className="!px-3 !py-2" onClick={onQuit}>
-          {t("game.abort")}
-        </ArcadeButton>
+        {!coaching && (
+          <ArcadeButton variant="ghost" className="!px-3 !py-2" onClick={onQuit}>
+            {t("game.abort")}
+          </ArcadeButton>
+        )}
       </div>
 
-      <p className="border border-gold/40 bg-gold/10 px-3 py-2 text-center font-hud text-[11px] leading-6 text-gold rtl:tracking-normal">
+      <p className="border border-gold/40 bg-gold/10 px-3 py-2 text-center text-sm leading-6 text-gold">
         {t("game.howToServe")}
       </p>
 
@@ -490,11 +492,9 @@ export function ShiftPlay({ progress, muted, onMute, onQuit, onEnd }: Props) {
             cooking={state.cooking}
             canCook={state.cooking.length < meta.slots}
             hasCustomer={Boolean(selected)}
-            tourItemId={coaching && step === 2 && selected ? nextNeededFood(selected.order, state.plate) : null}
+            tourItemId={coaching && step === 1 && selected ? nextNeededFood(selected.order, state.plate) : null}
             onCook={(item) => dispatch({ type: "COOK", item, fast: coaching })}
             onClear={() => dispatch({ type: "CLEAR" })}
-            onServe={() => dispatch({ type: "SERVE" })}
-            serveDisabled={!selected || state.plate.length === 0}
           />
         </div>
       </div>

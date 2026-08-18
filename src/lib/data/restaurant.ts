@@ -320,3 +320,18 @@ export function bumpStreak(lastPlayDate: string | undefined, streak: number, tod
   if (lastPlayDate === yesterdayStamp(today)) return { lastPlayDate: today, streak: current + 1 };
   return { lastPlayDate: today, streak: 1 };
 }
+
+export function dailyCheckIn(lastPlayDate: string | undefined, streak: number, today: string, passed: boolean) {
+  if (!passed) {
+    return { applied: false, lastPlayDate: lastPlayDate || "", streak: streak || 0, bonusMoney: 0, bonusXp: 0 };
+  }
+  const next = bumpStreak(lastPlayDate, streak, today);
+  const firstToday = lastPlayDate !== today;
+  return {
+    applied: firstToday,
+    lastPlayDate: next.lastPlayDate,
+    streak: next.streak,
+    bonusMoney: firstToday ? 50 + next.streak * 15 : 0,
+    bonusXp: firstToday ? 40 + next.streak * 8 : 0,
+  };
+}

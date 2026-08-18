@@ -152,4 +152,8 @@ export type ShiftSummary = {
   newLevel: number;
   levelName: string;
   passed: boolean;
+  streak?: number;
+  dailyBonus?: boolean;
+  bonusMoney?: number;
+  bonusXp?: number;
 };

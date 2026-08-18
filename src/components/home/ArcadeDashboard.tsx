@@ -72,7 +72,7 @@ export function ArcadeDashboard() {
           {t(`tier.${restaurant.level}`)}
         </h1>
         <p className="mt-4 font-hud text-sm text-cyan tracking-[0.2em] rtl:tracking-normal">
-          <T k="home.support" />
+          {status === "due" ? t("home.streakRisk") : t("home.support")}
         </p>
         <p className="mx-auto mt-4 max-w-md text-sm text-muted">
           <T k="home.body" />
@@ -88,7 +88,7 @@ export function ArcadeDashboard() {
           </ArcadeButton>
         </motion.div>
         <p className="mt-3 font-hud text-[10px] text-gold tracking-[0.18em] rtl:tracking-normal">
-          {status === "today" ? t("home.playedToday") : t("home.whyReturn")}
+          {status === "today" ? t("home.cafeWarm") : status === "due" ? t("home.streakRisk") : t("home.whyReturn")}
         </p>
 
         <div className="relative mx-auto mt-8 grid max-w-sm grid-cols-4 gap-2">

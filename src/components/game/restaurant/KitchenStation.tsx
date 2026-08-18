@@ -17,8 +17,6 @@ type Props = {
   canCook: boolean;
   onCook: (item: PrepItem) => void;
   onClear: () => void;
-  onServe: () => void;
-  serveDisabled: boolean;
   tourItemId?: string | null;
   hasCustomer?: boolean;
 };
@@ -30,8 +28,6 @@ export function KitchenStation({
   canCook,
   onCook,
   onClear,
-  onServe,
-  serveDisabled,
   tourItemId,
   hasCustomer = false,
 }: Props) {
@@ -45,7 +41,7 @@ export function KitchenStation({
         : t("game.serveReady");
   return (
     <ArcadePanel className="p-3">
-      <div className="mb-3 min-h-24 border-2 border-dashed border-gold bg-gold/10 p-3" data-tour="shift-plate">
+      <div className="mb-3 hidden min-h-24 border-2 border-dashed border-gold bg-gold/10 p-3 lg:block" data-tour="shift-plate">
         <p className="font-hud text-[10px] text-gold rtl:tracking-normal">{t("game.plate")}</p>
         <div className="mt-2 flex min-h-12 flex-wrap gap-2">
           {plate.length === 0 && cooking.length === 0 && (
@@ -103,15 +99,6 @@ export function KitchenStation({
       </div>
 
       <p className="mt-3 text-sm leading-6 text-gold">{hint}</p>
-      <ArcadeButton
-        variant="magenta"
-        className={cn("mt-2 w-full min-h-14 text-sm", !serveDisabled && "shadow-[0_0_22px_#ff2ec8]")}
-        tour="shift-serve"
-        disabled={serveDisabled}
-        onClick={onServe}
-      >
-        {t("game.serve")}
-      </ArcadeButton>
       <ArcadeButton variant="ghost" className="mt-2 w-full min-h-10" onClick={onClear}>
         {t("game.clear")}
       </ArcadeButton>

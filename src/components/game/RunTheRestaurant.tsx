@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useArcade } from "@/lib/context/ArcadeContext";
 import { nextRestaurantLevel } from "@/lib/game/shift";
+import { dailyCheckIn, todayStamp } from "@/lib/data/restaurant";
 import type { ShiftSummary } from "@/lib/types";
 import { RestaurantMenu } from "@/components/game/restaurant/RestaurantMenu";
 import { RestaurantHub } from "@/components/game/restaurant/RestaurantHub";
@@ -22,7 +23,7 @@ export function RunTheRestaurant() {
   const router = useRouter();
   const { t } = useLanguage();
   const { restaurant, buyUpgrade, applyShift, setMuted } = useArcade();
-  const { phase, autoShift, clearAutoShift, beginCoach } = useOnboarding();
+  const { autoShift, clearAutoShift } = useOnboarding();
   const [view, setView] = useState<View>("menu");
   const [summary, setSummary] = useState<ShiftSummary | null>(null);
   const [shiftKey, setShiftKey] = useState(0);
@@ -44,11 +45,16 @@ export function RunTheRestaurant() {
     if (closing.current) return;
     closing.current = true;
     const next = nextRestaurantLevel(restaurant.xp + raw.xp, restaurant.level);
+    const check = dailyCheckIn(restaurant.lastPlayDate, restaurant.streak, todayStamp(), raw.passed);
     const full: ShiftSummary = {
       ...raw,
       leveledUp: next.leveledUp,
       newLevel: next.level,
       levelName: next.name,
+      streak: check.streak,
+      dailyBonus: check.applied,
+      bonusMoney: check.bonusMoney,
+      bonusXp: check.bonusXp,
     };
     applyShift(full);
     setSummary(full);
@@ -60,7 +66,7 @@ export function RunTheRestaurant() {
       {view === "menu" && (
         <RestaurantMenu
           progress={restaurant}
-          onStart={() => (phase === "tour" ? beginCoach() : startShift())}
+          onStart={startShift}
           onRestaurant={() => setView("hub")}
           onUpgrades={() => setView("upgrades")}
           onLeaderboard={() => router.push("/leaderboard")}

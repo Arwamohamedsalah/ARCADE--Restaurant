@@ -11,7 +11,6 @@ import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { CRTOverlay } from "@/components/ui/CRTOverlay";
 import { ArcadeToasts } from "@/components/ui/ArcadeToasts";
 import { InsertCoin } from "@/components/insert/InsertCoin";
-import { PlayerSelect } from "@/components/onboarding/PlayerSelect";
 import { WelcomePlace } from "@/components/onboarding/WelcomePlace";
 import { GuidedTour } from "@/components/onboarding/GuidedTour";
 import { NameGate } from "@/components/profile/PlayerNameForm";
@@ -24,8 +23,8 @@ export function ArcadeShell({ children }: { children: ReactNode }) {
   const { phase } = useOnboarding();
   const pathname = usePathname();
   const playMode = pathname.startsWith("/play");
-  const floatingLang = playMode || !insertedCoin || phase === "ask" || phase === "welcome";
-  const inSite = hydrated && insertedCoin && ready && phase !== "ask" && phase !== "welcome" && phase !== "loading";
+  const floatingLang = playMode || !insertedCoin || phase === "setup";
+  const inSite = hydrated && insertedCoin && ready && phase !== "setup" && phase !== "loading";
   const needName = inSite && phase === "done" && !hasCustomHandle(player.handle);
 
   return (
@@ -60,10 +59,9 @@ export function ArcadeShell({ children }: { children: ReactNode }) {
       <AnimatePresence>
         {hydrated && !insertedCoin && <InsertCoin key="insert-coin" onDone={insertCoin} />}
       </AnimatePresence>
-      {hydrated && insertedCoin && ready && phase === "welcome" && <WelcomePlace />}
-      {hydrated && insertedCoin && ready && phase === "ask" && <PlayerSelect />}
+      {hydrated && insertedCoin && ready && phase === "setup" && <WelcomePlace />}
       {needName && <NameGate />}
-      {hydrated && insertedCoin && ready && (phase === "tour" || phase === "coach") && <GuidedTour />}
+      {hydrated && insertedCoin && ready && phase === "coach" && <GuidedTour />}
     </div>
   );
 }

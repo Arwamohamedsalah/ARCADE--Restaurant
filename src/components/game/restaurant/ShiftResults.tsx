@@ -24,15 +24,14 @@ export function ShiftResults({ summary, onNext, onRestaurant, onRetry }: Props) 
         <motion.p initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="font-pixel text-lg text-magenta sm:text-2xl">
           {t("game.failed")}
         </motion.p>
+        <p className="text-sm leading-7 text-gold">{t("game.failHook")}</p>
         <ArcadePanel className="space-y-3 p-5 text-start">
           <Row label={t("game.satisfaction")} value={`${Math.round(summary.satisfaction)}%`} />
           <Row label={t("game.moneyEarned")} value={formatMoney(summary.earnings, locale)} />
           <Row label={t("game.ordersServed")} value={`${summary.completed}/${summary.quota}`} />
         </ArcadePanel>
-        <div className="flex flex-wrap justify-center gap-3">
-          <ArcadeButton onClick={onRetry}>{t("game.tryAgain")}</ArcadeButton>
-          <ArcadeButton variant="ghost" onClick={onRestaurant}>{t("game.restaurant")}</ArcadeButton>
-        </div>
+        <ArcadeButton className="w-full min-h-14" onClick={onRetry}>{t("game.tryAgain")}</ArcadeButton>
+        <ArcadeButton variant="ghost" onClick={onRestaurant}>{t("game.restaurant")}</ArcadeButton>
       </div>
     );
   }
@@ -43,10 +42,22 @@ export function ShiftResults({ summary, onNext, onRestaurant, onRetry }: Props) 
         {t("game.dayComplete", { day: String(summary.day).padStart(2, "0") })}
       </motion.p>
       <p className="font-hud text-[10px] text-cyan tracking-[0.2em] rtl:tracking-normal">{dayName}</p>
+
+      <ArcadePanel glow="gold" className="p-5">
+        <p className="font-hud text-[10px] text-gold tracking-[0.18em] rtl:tracking-normal">{t("home.streakLabel")}</p>
+        <p className="mt-2 font-pixel text-xl text-cream">{t("game.streakNow", { n: summary.streak || 1 })}</p>
+        {summary.dailyBonus ? (
+          <p className="mt-3 text-sm leading-6 text-lime">
+            {t("game.dailyBonus")} · {formatMoney(summary.bonusMoney || 0, locale)} · +{summary.bonusXp || 0} {t("hud.xp")}
+          </p>
+        ) : (
+          <p className="mt-3 text-sm leading-6 text-muted">{t("game.extraToday")}</p>
+        )}
+        <p className="mt-3 text-base leading-7 text-cream">{t("game.comeTomorrow")}</p>
+      </ArcadePanel>
+
       <ArcadePanel className="space-y-3 p-5 text-start">
         <Row label={t("game.customersServed")} value={String(summary.served)} />
-        <Row label={t("game.ordersCompleted")} value={String(summary.completed)} />
-        <Row label={t("game.ordersFailed")} value={String(summary.failed)} />
         <Row label={t("game.totalEarnings")} value={formatMoney(summary.earnings, locale)} />
         <Row label={t("game.xpEarned")} value={String(summary.xp)} />
         <Row label={t("game.bestCombo")} value={`x${Math.max(summary.bestCombo, 1)}`} />
@@ -64,10 +75,8 @@ export function ShiftResults({ summary, onNext, onRestaurant, onRetry }: Props) 
           <p className="mt-3 text-base leading-7 text-cream">{t("game.victoryBody")}</p>
         </motion.div>
       )}
-      <div className="flex flex-wrap justify-center gap-3">
-        <ArcadeButton onClick={onNext}>{t("game.nextDay")}</ArcadeButton>
-        <ArcadeButton variant="gold" onClick={onRestaurant}>{t("game.restaurant")}</ArcadeButton>
-      </div>
+      <ArcadeButton className="w-full min-h-14" onClick={onNext}>{t("game.oneMore")}</ArcadeButton>
+      <ArcadeButton href="/" variant="gold" className="w-full min-h-12">{t("game.seeTomorrow")}</ArcadeButton>
     </div>
   );
 }

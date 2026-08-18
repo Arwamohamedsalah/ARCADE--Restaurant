@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { useLanguage } from "@/lib/context/LanguageContext";
-import { COACH_STEPS, TOUR_STEPS, useOnboarding } from "@/lib/context/OnboardingContext";
+import { COACH_STEPS, useOnboarding } from "@/lib/context/OnboardingContext";
 import { ArcadeButton } from "@/components/ui/ArcadeButton";
 import { arcadeSfx } from "@/lib/sound";
 
@@ -23,10 +23,10 @@ function readTarget(id: string | null) {
 
 export function GuidedTour() {
   const { t } = useLanguage();
-  const { phase, step, next, skip, beginCoach } = useOnboarding();
+  const { phase, step, next, skip } = useOnboarding();
   const pathname = usePathname();
   const router = useRouter();
-  const steps = phase === "coach" ? COACH_STEPS : TOUR_STEPS;
+  const steps = COACH_STEPS;
   const current = steps[step];
   const [rect, setRect] = useState<DOMRect | null>(null);
   const [vh, setVh] = useState(800);
@@ -64,7 +64,7 @@ export function GuidedTour() {
     };
   }, [current, pathname]);
 
-  if (!current || (phase !== "tour" && phase !== "coach")) return null;
+  if (!current || phase !== "coach") return null;
 
   const last = step === steps.length - 1;
   const pad = 12;
@@ -77,14 +77,13 @@ export function GuidedTour() {
       }
     : null;
 
-  const banner = phase === "coach" || Boolean(current.target);
+  const banner = Boolean(current.target);
   const dockTop = !highlight || highlight.top + highlight.height / 2 > vh * 0.45;
   const showNext = !current.interact;
 
   const onAdvance = () => {
     arcadeSfx.click();
-    if (phase === "tour" && last) beginCoach();
-    else next();
+    next();
   };
 
   return (
@@ -186,7 +185,7 @@ export function GuidedTour() {
           </p>
           {showNext && (
             <ArcadeButton variant="gold" className="mt-4 min-h-12 w-full sm:w-auto" onClick={onAdvance}>
-              {last && phase === "coach" ? t("onboard.gotIt") : t("onboard.next")}
+              {last ? t("onboard.gotIt") : t("onboard.next")}
             </ArcadeButton>
           )}
           <button

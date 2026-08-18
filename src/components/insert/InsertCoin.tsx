@@ -21,7 +21,7 @@ export function InsertCoin({ onDone }: { onDone: () => void }) {
           window.clearInterval(id);
           return 100;
         }
-        return p + 4;
+        return p + 10;
       });
     }, 50);
     return () => window.clearInterval(id);
@@ -35,14 +35,14 @@ export function InsertCoin({ onDone }: { onDone: () => void }) {
 
   useEffect(() => {
     if (stage !== "ready") return;
-    const t = window.setTimeout(onDone, 1400);
+    const t = window.setTimeout(onDone, 500);
     return () => window.clearTimeout(t);
   }, [stage, onDone]);
 
   function insert() {
     arcadeSfx.coin();
     setStage("drop");
-    window.setTimeout(() => setStage("inserting"), 850);
+                window.setTimeout(() => setStage("inserting"), 400);
   }
 
   return (
@@ -79,12 +79,12 @@ export function InsertCoin({ onDone }: { onDone: () => void }) {
         </div>
 
         {stage === "attract" && (
-          <div className="mt-8 space-y-6">
+          <div className="mt-8 space-y-5">
+            <p className="text-base leading-7 text-cream">{t("insert.what")}</p>
             <p className="font-pixel text-lg text-gold blink sm:text-2xl">{t("insert.insertCoin")}</p>
             <ArcadeButton variant="gold" onClick={insert} className="min-h-12 min-w-[220px]">
-              {t("insert.insertCoin")}
+              {t("home.playNow")}
             </ArcadeButton>
-            <p className="text-xs text-muted">{t("insert.credit")}</p>
           </div>
         )}
 

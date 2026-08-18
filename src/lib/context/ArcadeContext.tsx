@@ -13,7 +13,7 @@ import {
 import { getMenuItem } from "@/lib/data/menu";
 import { REWARDS } from "@/lib/data/rewards";
 import { DEFAULT_PLAYER } from "@/lib/data/player";
-import { DEFAULT_RESTAURANT, restaurantLevelFromXp, UPGRADES, bumpStreak, todayStamp, streakStatus } from "@/lib/data/restaurant";
+import { DEFAULT_RESTAURANT, restaurantLevelFromXp, UPGRADES, todayStamp, streakStatus, dailyCheckIn } from "@/lib/data/restaurant";
 import { arcadeSfx, setArcadeMuted } from "@/lib/sound";
 import { useLanguage } from "@/lib/context/LanguageContext";
 import type {
@@ -276,26 +276,29 @@ function reducer(state: State, action: Action): State {
       };
     }
     case "APPLY_SHIFT": {
-      const xp = state.restaurant.xp + action.summary.xp;
+      const check = dailyCheckIn(
+        state.restaurant.lastPlayDate,
+        state.restaurant.streak,
+        todayStamp(),
+        action.summary.passed,
+      );
+      const xp = state.restaurant.xp + action.summary.xp + check.bonusXp;
       const level = restaurantLevelFromXp(xp);
       const arcadePay = state.restaurant.upgrades.arcade * 18;
-      const streak = action.summary.passed
-        ? bumpStreak(state.restaurant.lastPlayDate, state.restaurant.streak, todayStamp())
-        : { lastPlayDate: state.restaurant.lastPlayDate, streak: state.restaurant.streak };
       return {
         ...state,
-        coins: state.coins + Math.max(8, Math.floor(action.summary.earnings / 8)),
+        coins: state.coins + Math.max(8, Math.floor(action.summary.earnings / 8)) + (check.applied ? 12 : 0),
         restaurant: {
           ...state.restaurant,
           xp,
           level,
-          money: state.restaurant.money + action.summary.earnings + arcadePay,
+          money: state.restaurant.money + action.summary.earnings + arcadePay + check.bonusMoney,
           day: action.summary.passed ? state.restaurant.day + 1 : state.restaurant.day,
           totalServed: state.restaurant.totalServed + action.summary.served,
           bestCombo: Math.max(state.restaurant.bestCombo, action.summary.bestCombo),
           shiftsCleared: state.restaurant.shiftsCleared + (action.summary.passed ? 1 : 0),
-          streak: streak.streak,
-          lastPlayDate: streak.lastPlayDate,
+          streak: check.streak,
+          lastPlayDate: check.lastPlayDate,
         },
         player: {
           ...state.player,
